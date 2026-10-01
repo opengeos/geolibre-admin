@@ -1,0 +1,35 @@
+name: Catalog drift
+
+# GeoLibre's hideable ids (data sources, menus, menu items, built-in plugins)
+# live in its source tree. Fail when the committed catalog falls behind, so
+# someone runs `npm run sync:catalog` and reviews the change.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: opengeos/GeoLibre
+          path: GeoLibre
+          sparse-checkout: |
+            apps/geolibre-desktop/src
+            packages/plugins/src
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run sync:catalog -- GeoLibre
+      - name: Compare ids (ignoring the source commit)
+        run: |
+          git diff --stat -- src/catalog
+          git diff -U0 -- src/catalog | grep -E '^[+-] ' | grep -v '"commit"' && exit 1 || echo "Catalog is current."

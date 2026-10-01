@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/opengeos/geolibre-admin/main/schema/deployment.schema.json",
+  "title": "GeoLibre deployment policy",
+  "description": "Client-facing settings for a GeoLibre deployment. Every value is public: never put secrets here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "capabilities": {
+      "description": "Capabilities granted to the app. Omit to grant all; an empty list grants none.",
+      "type": "array",
+      "items": {
+        "enum": [
+          "project:edit",
+          "data:add",
+          "processing:run",
+          "export:data",
+          "plugins:install",
+          "settings:manage"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "interface": {
+      "description": "The admin-profile.json settings: experience level, lock, and hidden items.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "level": {
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced"
+          ]
+        },
+        "lock": {
+          "type": "boolean"
+        },
+        "hiddenDataSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "hiddenPlugins": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "hiddenMenus": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "hiddenMenuItems": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "builtins": {
+          "type": "boolean"
+        },
+        "catalog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "name",
+              "kind",
+              "fields"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              "name": {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              "kind": {
+                "enum": [
+                  "wms",
+                  "wfs",
+                  "wmts",
+                  "xyz",
+                  "arcgis",
+                  "csw"
+                ]
+              },
+              "category": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "number",
+                    "boolean"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sharing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "shareUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collabUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "embedOrigins": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "geolens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "branding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "appName": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "welcome": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

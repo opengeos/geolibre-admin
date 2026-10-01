@@ -1,0 +1,1216 @@
+{
+  "source": {
+    "repository": "opengeos/GeoLibre",
+    "commit": "d9fca18f"
+  },
+  "dataSourceSections": [
+    {
+      "id": "files",
+      "label": "Files"
+    },
+    {
+      "id": "webServices",
+      "label": "Web services"
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud formats"
+    },
+    {
+      "id": "threeD",
+      "label": "3D layers"
+    },
+    {
+      "id": "databases",
+      "label": "Databases"
+    }
+  ],
+  "dataSources": [
+    {
+      "id": "vector",
+      "section": "files",
+      "label": "Vector Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "raster",
+      "section": "files",
+      "label": "Raster Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "delimited-text",
+      "section": "files",
+      "label": "Delimited Text Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "cad",
+      "section": "files",
+      "label": "CAD (DXF/DWG) Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "gdb",
+      "section": "files",
+      "label": "File Geodatabase (GDB)",
+      "tier": "intermediate"
+    },
+    {
+      "id": "photos",
+      "section": "files",
+      "label": "Geotagged Photos",
+      "tier": "intermediate"
+    },
+    {
+      "id": "gpx",
+      "section": "files",
+      "label": "GPX Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "landxml",
+      "section": "files",
+      "label": "LandXML Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "polyline",
+      "section": "files",
+      "label": "Encoded Polyline",
+      "tier": "intermediate"
+    },
+    {
+      "id": "mbtiles",
+      "section": "files",
+      "label": "MBTiles Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "osm-pbf",
+      "section": "files",
+      "label": "OSM PBF Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "xyz",
+      "section": "webServices",
+      "label": "XYZ Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "wcs",
+      "section": "webServices",
+      "label": "WCS Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "wms",
+      "section": "webServices",
+      "label": "WMS Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "csw",
+      "section": "webServices",
+      "label": "CSW Catalog",
+      "tier": "intermediate"
+    },
+    {
+      "id": "wfs",
+      "section": "webServices",
+      "label": "WFS Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "wmts",
+      "section": "webServices",
+      "label": "WMTS Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "ogc-features",
+      "section": "webServices",
+      "label": "OGC API - Features",
+      "tier": "intermediate"
+    },
+    {
+      "id": "ogc-vector-tiles",
+      "section": "webServices",
+      "label": "OGC Vector Tiles",
+      "tier": "intermediate"
+    },
+    {
+      "id": "arcgis",
+      "section": "webServices",
+      "label": "ArcGIS Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "georss",
+      "section": "webServices",
+      "label": "GeoRSS Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "stac",
+      "section": "webServices",
+      "label": "STAC Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "video",
+      "section": "webServices",
+      "label": "Video Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "deckgl-viz",
+      "section": "webServices",
+      "label": "Deck.gl Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "geoparquet",
+      "section": "cloud",
+      "label": "GeoParquet Layer",
+      "tier": "basic"
+    },
+    {
+      "id": "flatgeobuf",
+      "section": "cloud",
+      "label": "FlatGeobuf Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "pmtiles",
+      "section": "cloud",
+      "label": "PMTiles Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "zarr",
+      "section": "cloud",
+      "label": "Zarr Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "netcdf",
+      "section": "cloud",
+      "label": "NetCDF / HDF",
+      "tier": "advanced"
+    },
+    {
+      "id": "lidar",
+      "section": "threeD",
+      "label": "LiDAR Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "splatting",
+      "section": "threeD",
+      "label": "Gaussian Splatting",
+      "tier": "advanced"
+    },
+    {
+      "id": "3d-tiles",
+      "section": "threeD",
+      "label": "3D Tiles Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "cesium-ion",
+      "section": "threeD",
+      "label": "Cesium Ion Asset",
+      "tier": "advanced"
+    },
+    {
+      "id": "czml",
+      "section": "threeD",
+      "label": "CZML Dynamic 3D Scene",
+      "tier": "advanced"
+    },
+    {
+      "id": "kml",
+      "section": "threeD",
+      "label": "KML / KMZ",
+      "tier": "advanced"
+    },
+    {
+      "id": "gltf-model",
+      "section": "threeD",
+      "label": "3D Model (glTF)",
+      "tier": "advanced"
+    },
+    {
+      "id": "duckdb",
+      "section": "databases",
+      "label": "DuckDB Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "postgres",
+      "section": "databases",
+      "label": "PostgreSQL Layer",
+      "tier": "advanced"
+    },
+    {
+      "id": "iceberg",
+      "section": "databases",
+      "label": "Apache Iceberg Layer",
+      "tier": "advanced"
+    }
+  ],
+  "menus": [
+    {
+      "id": "project",
+      "label": "Project",
+      "tier": "basic"
+    },
+    {
+      "id": "edit",
+      "label": "Edit",
+      "tier": "basic"
+    },
+    {
+      "id": "view",
+      "label": "View",
+      "tier": "basic"
+    },
+    {
+      "id": "addData",
+      "label": "Add Data",
+      "tier": "basic"
+    },
+    {
+      "id": "processing",
+      "label": "Processing",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls",
+      "label": "Controls",
+      "tier": "basic"
+    },
+    {
+      "id": "plugins",
+      "label": "Plugins",
+      "tier": "basic"
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "tier": "basic"
+    }
+  ],
+  "menuItems": [
+    {
+      "id": "project.new",
+      "menuId": "project",
+      "label": "New",
+      "tier": "basic"
+    },
+    {
+      "id": "project.openFrom",
+      "menuId": "project",
+      "label": "Open From",
+      "tier": "basic"
+    },
+    {
+      "id": "project.openRecent",
+      "menuId": "project",
+      "label": "Open Recent",
+      "tier": "basic"
+    },
+    {
+      "id": "project.history",
+      "menuId": "project",
+      "label": "History",
+      "tier": "basic"
+    },
+    {
+      "id": "project.import",
+      "menuId": "project",
+      "label": "Import",
+      "tier": "basic"
+    },
+    {
+      "id": "project.save",
+      "menuId": "project",
+      "label": "Save",
+      "tier": "basic"
+    },
+    {
+      "id": "project.saveAs",
+      "menuId": "project",
+      "label": "Save As",
+      "tier": "basic"
+    },
+    {
+      "id": "project.duplicate",
+      "menuId": "project",
+      "label": "Duplicate project",
+      "tier": "basic"
+    },
+    {
+      "id": "project.saveAsTemplate",
+      "menuId": "project",
+      "label": "Save as template",
+      "tier": "intermediate"
+    },
+    {
+      "id": "project.share",
+      "menuId": "project",
+      "label": "Share",
+      "tier": "intermediate"
+    },
+    {
+      "id": "project.exportHtml",
+      "menuId": "project",
+      "label": "Export as HTML",
+      "tier": "intermediate"
+    },
+    {
+      "id": "project.collaborate",
+      "menuId": "project",
+      "label": "Collaborate",
+      "tier": "advanced"
+    },
+    {
+      "id": "project.print",
+      "menuId": "project",
+      "label": "Print",
+      "tier": "intermediate"
+    },
+    {
+      "id": "project.printLayout",
+      "menuId": "project",
+      "label": "Print Layout",
+      "tier": "basic"
+    },
+    {
+      "id": "project.offlineRegion",
+      "menuId": "project",
+      "label": "Offline Basemap",
+      "tier": "advanced"
+    },
+    {
+      "id": "project.storymap",
+      "menuId": "project",
+      "label": "Story Map",
+      "tier": "advanced"
+    },
+    {
+      "id": "edit.undo",
+      "menuId": "edit",
+      "label": "Undo",
+      "tier": "basic"
+    },
+    {
+      "id": "edit.redo",
+      "menuId": "edit",
+      "label": "Redo",
+      "tier": "basic"
+    },
+    {
+      "id": "edit.selectByExpression",
+      "menuId": "edit",
+      "label": "Select by Expression",
+      "tier": "intermediate"
+    },
+    {
+      "id": "edit.selectByLocation",
+      "menuId": "edit",
+      "label": "Select by Location",
+      "tier": "intermediate"
+    },
+    {
+      "id": "edit.zoomToSelection",
+      "menuId": "edit",
+      "label": "Zoom to Selection",
+      "tier": "basic"
+    },
+    {
+      "id": "edit.invertSelection",
+      "menuId": "edit",
+      "label": "Invert Selection",
+      "tier": "intermediate"
+    },
+    {
+      "id": "edit.clearSelection",
+      "menuId": "edit",
+      "label": "Clear Selection",
+      "tier": "basic"
+    },
+    {
+      "id": "edit.exportSelection",
+      "menuId": "edit",
+      "label": "Export Selected Features as Layer",
+      "tier": "intermediate"
+    },
+    {
+      "id": "view.zoomIn",
+      "menuId": "view",
+      "label": "Zoom In",
+      "tier": "basic"
+    },
+    {
+      "id": "view.zoomOut",
+      "menuId": "view",
+      "label": "Zoom Out",
+      "tier": "basic"
+    },
+    {
+      "id": "view.previousView",
+      "menuId": "view",
+      "label": "Previous View",
+      "tier": "basic"
+    },
+    {
+      "id": "view.nextView",
+      "menuId": "view",
+      "label": "Next View",
+      "tier": "basic"
+    },
+    {
+      "id": "view.resetPitch",
+      "menuId": "view",
+      "label": "Reset Pitch",
+      "tier": "basic"
+    },
+    {
+      "id": "view.resetNorth",
+      "menuId": "view",
+      "label": "Reset Bearing",
+      "tier": "basic"
+    },
+    {
+      "id": "view.resetPitchBearing",
+      "menuId": "view",
+      "label": "Reset Pitch & Bearing",
+      "tier": "basic"
+    },
+    {
+      "id": "view.setView",
+      "menuId": "view",
+      "label": "Set View",
+      "tier": "intermediate"
+    },
+    {
+      "id": "view.splitView",
+      "menuId": "view",
+      "label": "Split View",
+      "tier": "intermediate"
+    },
+    {
+      "id": "view.renderingEngine",
+      "menuId": "view",
+      "label": "Rendering engine",
+      "tier": "basic"
+    },
+    {
+      "id": "view.googleMaps",
+      "menuId": "view",
+      "label": "View in Google Maps",
+      "tier": "basic"
+    },
+    {
+      "id": "view.googleEarth",
+      "menuId": "view",
+      "label": "View in Google Earth",
+      "tier": "basic"
+    },
+    {
+      "id": "processing.assistant",
+      "menuId": "processing",
+      "label": "AI Assistant",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.whitebox",
+      "menuId": "processing",
+      "label": "Whitebox Toolbox",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.conversion",
+      "menuId": "processing",
+      "label": "Conversion",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.vector",
+      "menuId": "processing",
+      "label": "Vector",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.network",
+      "menuId": "processing",
+      "label": "Network",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.statistics",
+      "menuId": "processing",
+      "label": "Spatial Statistics",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.raster",
+      "menuId": "processing",
+      "label": "Raster",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.geocode",
+      "menuId": "processing",
+      "label": "Geocode Addresses",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.batchTools",
+      "menuId": "processing",
+      "label": "Batch tools",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.modelBuilder",
+      "menuId": "processing",
+      "label": "Model Builder",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.segmentation",
+      "menuId": "processing",
+      "label": "AI Segmentation",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.objectDetection",
+      "menuId": "processing",
+      "label": "Object Detection",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.segmentEverything",
+      "menuId": "processing",
+      "label": "Segment Everything",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.sqlWorkspace",
+      "menuId": "processing",
+      "label": "SQL Workspace",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.pythonConsole",
+      "menuId": "processing",
+      "label": "Python Console",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.notebook",
+      "menuId": "processing",
+      "label": "Jupyter Notebook",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.dashboard",
+      "menuId": "processing",
+      "label": "Dashboard",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.history",
+      "menuId": "processing",
+      "label": "History",
+      "tier": "intermediate"
+    },
+    {
+      "id": "processing.planetaryComputer",
+      "menuId": "processing",
+      "label": "Planetary Computer",
+      "tier": "advanced"
+    },
+    {
+      "id": "processing.earthEngine",
+      "menuId": "processing",
+      "label": "Earth Engine",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.mapControl.navigation",
+      "menuId": "controls",
+      "label": "Navigation",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.fullscreen",
+      "menuId": "controls",
+      "label": "Fullscreen",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.compass",
+      "menuId": "controls",
+      "label": "Compass",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.geolocate",
+      "menuId": "controls",
+      "label": "Geolocate",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.mapControl.globe",
+      "menuId": "controls",
+      "label": "Globe",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.terrain",
+      "menuId": "controls",
+      "label": "Terrain",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.mapControl.scale",
+      "menuId": "controls",
+      "label": "Scale",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.attribution",
+      "menuId": "controls",
+      "label": "Attribution",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.mapControl.logo",
+      "menuId": "controls",
+      "label": "MapLibre logo",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.mapControl.maptoolkit-logo",
+      "menuId": "controls",
+      "label": "Maptoolkit logo",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.atmosphereEffects",
+      "menuId": "controls",
+      "label": "Atmospheric Effects",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.sun",
+      "menuId": "controls",
+      "label": "Sun",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.routeAnimation",
+      "menuId": "controls",
+      "label": "Route Animation",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.flightSimulator",
+      "menuId": "controls",
+      "label": "Flight Simulator",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.spinGlobe",
+      "menuId": "controls",
+      "label": "Spinning Globe",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.graticule",
+      "menuId": "controls",
+      "label": "Gridlines",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.pointerElevation",
+      "menuId": "controls",
+      "label": "Elevation",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.clouds",
+      "menuId": "controls",
+      "label": "Weather",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.directions",
+      "menuId": "controls",
+      "label": "Directions",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.reverseGeocode",
+      "menuId": "controls",
+      "label": "Reverse Geocode",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.search",
+      "menuId": "controls",
+      "label": "Search",
+      "tier": "basic"
+    },
+    {
+      "id": "controls.colorbar",
+      "menuId": "controls",
+      "label": "Colorbar",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.legend",
+      "menuId": "controls",
+      "label": "Legend",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.html",
+      "menuId": "controls",
+      "label": "HTML",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.measure",
+      "menuId": "controls",
+      "label": "Measure",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.bookmark",
+      "menuId": "controls",
+      "label": "Bookmark",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.minimap",
+      "menuId": "controls",
+      "label": "Minimap",
+      "tier": "intermediate"
+    },
+    {
+      "id": "controls.viewState",
+      "menuId": "controls",
+      "label": "View State",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.fieldCollection",
+      "menuId": "controls",
+      "label": "Field Collection",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.gpsTracking",
+      "menuId": "controls",
+      "label": "GPS Tracking",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.recordTour",
+      "menuId": "controls",
+      "label": "Record Map Tour",
+      "tier": "advanced"
+    },
+    {
+      "id": "controls.recordVideo",
+      "menuId": "controls",
+      "label": "Record Video",
+      "tier": "advanced"
+    },
+    {
+      "id": "settings.mapPreferences",
+      "menuId": "settings",
+      "label": "Map Preferences",
+      "tier": "intermediate"
+    },
+    {
+      "id": "settings.geocoding",
+      "menuId": "settings",
+      "label": "Geocoding",
+      "tier": "advanced"
+    },
+    {
+      "id": "settings.environment",
+      "menuId": "settings",
+      "label": "Environment Variables",
+      "tier": "intermediate"
+    },
+    {
+      "id": "settings.managePlugins",
+      "menuId": "settings",
+      "label": "Manage Plugins",
+      "tier": "intermediate"
+    },
+    {
+      "id": "settings.styleManager",
+      "menuId": "settings",
+      "label": "Style Manager",
+      "tier": "intermediate"
+    },
+    {
+      "id": "help.commandPalette",
+      "menuId": "help",
+      "label": "Command Palette",
+      "tier": "basic"
+    },
+    {
+      "id": "help.keyboardShortcuts",
+      "menuId": "help",
+      "label": "Keyboard Shortcuts",
+      "tier": "intermediate"
+    },
+    {
+      "id": "help.website",
+      "menuId": "help",
+      "label": "Website",
+      "tier": "basic"
+    },
+    {
+      "id": "help.github",
+      "menuId": "help",
+      "label": "GitHub repository",
+      "tier": "basic"
+    },
+    {
+      "id": "help.diagnostics",
+      "menuId": "help",
+      "label": "Diagnostics",
+      "tier": "advanced"
+    },
+    {
+      "id": "help.feedback",
+      "menuId": "help",
+      "label": "Give Feedback",
+      "tier": "intermediate"
+    },
+    {
+      "id": "help.checkForUpdates",
+      "menuId": "help",
+      "label": "Check for Updates",
+      "tier": "intermediate"
+    },
+    {
+      "id": "help.about",
+      "menuId": "help",
+      "label": "About",
+      "tier": "basic"
+    }
+  ],
+  "plugins": [
+    {
+      "id": "maplibre-a5-grid",
+      "name": "A5 Grid",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-annotations",
+      "name": "Annotations",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-arcgis-hub",
+      "name": "ArcGIS Hub",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-basemap-control",
+      "name": "Basemaps",
+      "tier": "basic"
+    },
+    {
+      "id": "maplibre-gl-ckan",
+      "name": "CKAN",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-clouds",
+      "name": "Clouds",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-components",
+      "name": "Components",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-dggal",
+      "name": "DGGAL",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-dggrid",
+      "name": "DGGRID",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-dimensions",
+      "name": "Dimensions",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-earthdata-gis",
+      "name": "Earthdata GIS",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-elevation-profile",
+      "name": "Elevation Profile",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-fema-wms",
+      "name": "FEMA NFHL",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-fields-of-the-world",
+      "name": "Fields of the World",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-flight-simulator",
+      "name": "Flight Simulator",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-geoagent",
+      "name": "GeoAgent",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-geo-editor",
+      "name": "GeoEditor",
+      "tier": "basic"
+    },
+    {
+      "id": "maplibre-geohash",
+      "name": "Geohash",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-geolens",
+      "name": "GeoLens",
+      "tier": "intermediate"
+    },
+    {
+      "id": "gods-eye-view",
+      "name": "God's Eye View",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-graticule",
+      "name": "Gridlines",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-h3-grid",
+      "name": "H3 Grid",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-esri-wayback",
+      "name": "Historical Imagery",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-huggingface",
+      "name": "Hugging Face",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-ign-lidar-hd",
+      "name": "IGN LiDAR HD",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-layer-control",
+      "name": "Layer Control",
+      "tier": "basic"
+    },
+    {
+      "id": "maplibre-gl-swipe",
+      "name": "Layer Swipe",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-mapillary",
+      "name": "Mapillary",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-nasa-earthdata",
+      "name": "NASA Earthdata",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-natural-earth",
+      "name": "Natural Earth",
+      "tier": "basic"
+    },
+    {
+      "id": "geolibre-ocean-data-platform",
+      "name": "Ocean Data Platform",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-olc",
+      "name": "OLC",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-openaerialmap",
+      "name": "OpenAerialMap",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-osm-downloader",
+      "name": "OSM Downloader",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-overture-maps",
+      "name": "Overture Maps",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-planet-open-data",
+      "name": "Planet Open Data",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-point-cloud-annotation",
+      "name": "Point Cloud Annotation",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-portolan",
+      "name": "Portolan",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-precipitation",
+      "name": "Precipitation",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-route-animation",
+      "name": "Route Animation",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-s2-grid",
+      "name": "S2 Grid",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-samgeo",
+      "name": "SamGeo",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-satellite-embeddings",
+      "name": "Satellite Embeddings",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-socrata",
+      "name": "Socrata",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-source-coop",
+      "name": "Source Cooperative",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-stac-catalogs",
+      "name": "STAC Catalogs",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-streetview",
+      "name": "Street View",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-sun",
+      "name": "Sun Simulation",
+      "tier": "intermediate"
+    },
+    {
+      "id": "geolibre-tennessee-gis",
+      "name": "Tennessee GIS",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-tilecode",
+      "name": "Tilecode",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-time-slider",
+      "name": "Time Slider",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-timelapse",
+      "name": "Timelapse",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-enviroatlas",
+      "name": "US EPA EnviroAtlas",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-us-federal-gis",
+      "name": "US Federal GIS",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-us-local-gis",
+      "name": "US Local GIS",
+      "tier": "advanced"
+    },
+    {
+      "id": "geolibre-us-state-gis",
+      "name": "US State GIS",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-usgs-lidar",
+      "name": "USGS LiDAR",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-gl-national-map",
+      "name": "USGS National Map",
+      "tier": "advanced"
+    },
+    {
+      "id": "maplibre-usgs-nldi",
+      "name": "USGS NLDI",
+      "tier": "intermediate"
+    },
+    {
+      "id": "maplibre-gl-vantor",
+      "name": "Vantor Open Data",
+      "tier": "advanced"
+    }
+  ]
+}

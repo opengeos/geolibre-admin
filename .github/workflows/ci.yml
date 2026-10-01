@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Generated schema and validator are up to date
+        run: |
+          npm run sync:schema
+          git diff --exit-code -- schema src/policy/schema-validator.generated.js
+      - run: npm run build
+
+  contract:
+    name: Contract test against the reference server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - name: Install the GeoLibre reference projects server
+        run: pip install "geolibre-server-api @ git+https://github.com/opengeos/GeoLibre.git#subdirectory=backend/geolibre_server_api"
+      - name: Start the server
+        env:
+          GEOLIBRE_DATABASE_URL: sqlite:///${{ runner.temp }}/server.db
+          GEOLIBRE_STORAGE_PATH: ${{ runner.temp }}/objects
+          GEOLIBRE_HOST: 127.0.0.1
+          GEOLIBRE_PORT: "8000"
+          GEOLIBRE_PUBLIC_URL: http://127.0.0.1:8000
+        run: |
+          nohup geolibre-server-api > "$RUNNER_TEMP/server.log" 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8000/api/projects > /dev/null && exit 0
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/server.log"
+          exit 1
+      - run: npx vitest run tests/server.integration.test.ts
+        env:
+          GEOLIBRE_TEST_SERVER_URL: http://127.0.0.1:8000
+      - if: failure()
+        run: cat "$RUNNER_TEMP/server.log"

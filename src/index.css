@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f5;
+  --border: #dde1e6;
+  --text: #16191d;
+  --muted: #5d6670;
+  --accent: #0f766e;
+  --accent-hover: #0d645d;
+  --accent-soft: #e3f3f1;
+  --accent-text: #ffffff;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --warning: #9a6700;
+  --warning-soft: #fff4d6;
+  --ok: #1a7f37;
+  --ok-soft: #e6f4ea;
+  --focus: #2563eb;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1215;
+    --surface: #171b1f;
+    --surface-2: #1f2429;
+    --border: #2d343b;
+    --text: #e8ebee;
+    --muted: #9aa4ae;
+    --accent: #2dd4bf;
+    --accent-hover: #5eead4;
+    --accent-soft: #11302d;
+    --accent-text: #06201d;
+    --danger: #f97066;
+    --danger-soft: #3a1714;
+    --warning: #f5c451;
+    --warning-soft: #33280d;
+    --ok: #5dd879;
+    --ok-soft: #12301b;
+    --focus: #60a5fa;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1215;
+  --surface: #171b1f;
+  --surface-2: #1f2429;
+  --border: #2d343b;
+  --text: #e8ebee;
+  --muted: #9aa4ae;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-soft: #11302d;
+  --accent-text: #06201d;
+  --danger: #f97066;
+  --danger-soft: #3a1714;
+  --warning: #f5c451;
+  --warning-soft: #33280d;
+  --ok: #5dd879;
+  --ok-soft: #12301b;
+  --focus: #60a5fa;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, monospace;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent);
+}

@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: \.generated\.js$
+      - id: trailing-whitespace
+        exclude: \.generated\.js$
+      - id: check-merge-conflict
+      - id: check-added-large-files
