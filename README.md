@@ -24,7 +24,7 @@ It has two parts:
 
 ## Use it
 
-The latest build is published at <https://opengeos.github.io/geolibre-admin/>.
+The latest build is published at <https://opengeos.org/geolibre-admin>.
 The policy editor never sends anything anywhere: drafts stay in the browser's
 localStorage and exports are downloads.
 
