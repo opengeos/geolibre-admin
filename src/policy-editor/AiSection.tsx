@@ -25,25 +25,28 @@ export function AiSection({
           checked={policy.ai?.enabled === true}
           onChange={(on) => setAi({ enabled: on ? true : undefined })}
           label="Enable the AI assistant"
-          description="Exposes the same-origin /ai route. The server also needs the proxy variables below."
+          description="ai.enabled configures the deployment proxy. Server proxy requires GEOLIBRE_AI_URL=/ai, GEOLIBRE_AI_PROXY_URL, and GEOLIBRE_AI_PROXY_TOKEN."
         />
         <Field
           label="Model"
-          hint="Empty keeps the image default (openai/gpt-5.6-luna)."
+          hint="Empty uses the configured runtime, build-time, or GeoLibre default model."
           error={issueAt(issues, "/ai/model")}
         >
           {(id) => (
             <Input
               id={id}
               value={policy.ai?.model ?? ""}
-              placeholder="openai/gpt-5.6-luna"
+              placeholder="Configured model"
               onChange={(event) => setAi({ model: event.target.value || undefined })}
             />
           )}
         </Field>
         <Notice tone="warning">
-          The proxy URL and token (GEOLIBRE_AI_PROXY_URL, GEOLIBRE_AI_PROXY_TOKEN) stay in the server
-          environment and are never written to deployment.json. This tool never asks for them.
+          Final <code>ai.enabled</code> false disables the server proxy; true requires all three server variables
+          above. <code>GEOLIBRE_AI_URL=/ai</code> overrides a mounted false value to enable it; upstream URL/token
+          alone do not enable the route. <code>processing:run</code> governs client assistant affordances, not the
+          server <code>/ai</code> decision. Explicit client false removes an operator-configured proxy, while
+          omission uses the next source; it does not remove a provider entered in Settings. Secrets stay server-only.
         </Notice>
       </div>
     </Card>

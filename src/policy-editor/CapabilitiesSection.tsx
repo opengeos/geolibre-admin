@@ -4,9 +4,9 @@ import { CAPABILITIES, type Capability, type DeploymentPolicy } from "../policy/
 const DESCRIPTIONS: Record<Capability, string> = {
   "project:edit": "New, Open, Save, Import, Project History, Collaborate, StoryMap, Undo/Redo.",
   "data:add": "The Add Data menu, drag-and-drop, and the embed API's addLayer/addData.",
-  "processing:run": "The Processing menu: Whitebox, SQL, Python, AI assistant, geocoding, conversion tools.",
+  "processing:run": "Processing tools including Model Builder, Whitebox, SQL, Python, AI assistant, geocoding and conversion.",
   "export:data": "Share, Export HTML, Print, Print Layout, Offline Basemap, embed exportImage.",
-  "plugins:install": "The Plugins menu, activating plugins, and the plugin marketplace.",
+  "plugins:install": "Plugin activation/deactivation, plugin-registered menus, and the marketplace.",
   "settings:manage": "The Settings dialog and the Style Manager.",
 };
 
@@ -43,7 +43,7 @@ export function CapabilitiesSection({
               checked={!restricted}
               onChange={() => setPolicy(({ capabilities: _omit, ...rest }) => rest)}
             />
-            Grant everything (GeoLibre's default)
+            No policy override (use environment or GeoLibre defaults)
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -68,13 +68,14 @@ export function CapabilitiesSection({
           ))}
         </div>
         <Notice tone="warning">
-          Capabilities remove menus and commands in the browser. They don't restrict the server: the
-          sidecar and AI proxy still answer requests, so pair them with the server settings. In releases up
-          to v3.2.0 GeoLibre reads them at <strong>build time</strong> only (
-          <code>VITE_GEOLIBRE_CAPABILITIES</code>), so a restricted set means building your own image. With a
-          runtime <code>deployment.json</code> they are read when the app starts, but they fail open: a file
-          that is missing, blocked or slower than 3 seconds leaves the session with the full grant, so this
-          is not enforcement (see GeoLibre's docs/deployment-policy.md).
+          In runtime-capable containers, <code>/sidecar/whitebox</code>, <code>/sidecar/raster</code>,{" "}
+          <code>/sidecar/vector</code>, <code>/sidecar/pointcloud</code>, <code>/sidecar/ml</code>, and{" "}
+          <code>/sidecar/sql</code> require <code>processing:run</code>; <code>/sidecar/postgis</code> requires{" "}
+          <code>data:add</code>; <code>/sidecar/conversion</code> requires either. Without either
+          grant the bundled sidecar is not started. Utility routes are outside these guards while it runs.
+          These container route checks do not cover browser WASM, desktop processing, or separately exposed
+          services; retain authentication and restrict conversion roots. Client policy can be unavailable or
+          bypassed; do not treat it as a security boundary.
         </Notice>
       </div>
     </Card>

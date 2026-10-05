@@ -7,13 +7,16 @@ import type { Issue } from "../policy/validate";
 export function ExportSection({
   policy,
   operator,
+  target,
+  setTarget,
   issues,
 }: {
   policy: DeploymentPolicy;
   operator: OperatorSettings;
+  target: ExportTarget;
+  setTarget: (target: ExportTarget) => void;
   issues: Issue[];
 }) {
-  const [target, setTarget] = useState<ExportTarget>("legacy");
   const files = exportFiles(policy, operator, target);
   const [selected, setSelected] = useState("");
   const file = files.find((item) => item.name === selected) ?? files[0];
@@ -73,7 +76,7 @@ export function ExportSection({
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            Switch to the runtime deployment.json target to deploy them.
+            Use the runtime target only with a build that includes runtime policy delivery and enforcement.
           </Notice>
         ) : null}
         {errors.length ? (
@@ -81,9 +84,8 @@ export function ExportSection({
         ) : null}
         {needsBuild ? (
           <Notice tone="warning">
-            This policy uses build-time settings (capabilities, the welcome wizard), which legacy GeoLibre reads only
-            as build arguments, so it needs a custom image built from a GeoLibre checkout. The other settings work
-            with the published image. The runtime deployment.json target reads them at startup instead.
+            This policy uses build-time settings (<code>VITE_GEOLIBRE_CAPABILITIES</code> and{" "}
+            <code>VITE_WELCOME_DISABLED</code>). Use a custom image built from a GeoLibre checkout to include them.
           </Notice>
         ) : null}
         <div className="grid gap-4 lg:grid-cols-[16rem_minmax(0,1fr)]">
@@ -123,17 +125,22 @@ export function ExportSection({
         <p className="text-xs text-muted">
           {target === "deployment" ? (
             <>
-              GeoLibre's current main reads the public policy from{" "}
-              <code>GEOLIBRE_DEPLOYMENT_FILE</code> and writes the served <code>/deployment.json</code> at boot. The
-              exporter mounts that input read-only at <code>/etc/geolibre/deployment.json</code>. This requires a build
-              with merged runtime delivery and enforcement; released v3.2.0 does not include it. Enabled AI requires
-              filling the operator proxy URL and token placeholders in the export format you use; never put
-              credentials in the policy JSON.
+              Use the separate input mount <code>./deployment.json:/etc/geolibre/deployment.json:ro</code> and set{" "}
+              <code>GEOLIBRE_DEPLOYMENT_FILE=/etc/geolibre/deployment.json</code>. The generated{" "}
+              <code>docker-run.sh</code> and <code>compose.yaml</code> use this input contract. A runtime-capable
+              container validates it at boot; invalid or unreadable input aborts startup. Policy changes on a
+              runtime-capable build do not require rebuilding. The container atomically writes public{" "}
+              <code>/usr/share/nginx/html/deployment.json</code>; nonblank <code>GEOLIBRE_*</code> variables override
+              input fields before generation. In the client, deployment.json overrides{" "}
+              <code>window.__GEOLIBRE_DEPLOYMENT_ENV__</code>, which overrides build settings; absent, invalid,
+              blocked, or late (over 3 seconds) client policy falls back to the next source, not always full access.
+              Only container route families are enforced; desktop provisioning and client plugin checks are not
+              security boundaries.
             </>
           ) : (
             <>
-              Released GeoLibre versions don't read <code>deployment.json</code>, so this target omits it. Re-export for
-              the runtime target once you run a build that includes it.
+              GeoLibre through v3.2.0 does not read <code>deployment.json</code>. Use runtime policy only with a build
+              that includes the runtime delivery and enforcement changes.
             </>
           )}
         </p>

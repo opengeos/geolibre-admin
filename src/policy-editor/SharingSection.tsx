@@ -35,7 +35,7 @@ export function SharingSection({
             shareMode === "default"
               ? "The image default publishes to share.geolibre.app."
               : shareMode === "off"
-                ? "Removes Share and the Project Gallery, so nothing can be published by accident."
+                ? "Removes the Share and Project Gallery client affordances; server-side publishing access is unchanged."
                 : "Your own server implementing the GeoLibre projects API."
           }
         >
@@ -156,7 +156,7 @@ export function BrandingSection({ policy, setPolicy }: { policy: DeploymentPolic
           checked={policy.branding?.welcome !== false}
           onChange={(on) => setBranding({ welcome: on ? undefined : false })}
           label="Show the first-launch welcome wizard"
-          description="Unchecking it is a build-time setting (VITE_WELCOME_DISABLED). An interface profile also skips it."
+          description="Legacy builds use VITE_WELCOME_DISABLED at build time; runtime-capable builds use branding.welcome:false. An interface profile also skips the wizard."
         />
       </div>
     </Card>
@@ -180,7 +180,7 @@ export function OperatorSection({
           checked={operator.sidecar}
           onChange={(sidecar) => setOperator({ sidecar })}
           label="Run the processing sidecar"
-          description="Backs Whitebox, conversion, and raster tools. Off runs nginx only (GEOLIBRE_DISABLE_SIDECAR=1)."
+          description="Backs Whitebox, conversion, and raster tools. In runtime-capable containers, GEOLIBRE_DISABLE_SIDECAR=1 skips uvicorn and bundled /sidecar/ requests receive JSON HTTP 403; other nginx routes remain served."
         />
         {operator.sidecar ? (
           <>

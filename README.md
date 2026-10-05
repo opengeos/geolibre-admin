@@ -12,13 +12,13 @@ It has two parts:
   data sources and plugins), the plugin registry and allow/block lists, the
   organization service library, sharing and embedding, GeoLens, the AI
   assistant, branding, and the container's server settings. It
-  validates with the same rules GeoLibre's container applies at startup and
-  exports for one of two targets: *Legacy GeoLibre (<= v3.2.0)* gives the files
-  released versions read (`admin-profile.json`, a services file, a `.env`
-  file, `docker run` commands, `compose.yaml`) and lists the settings it
-  can't express; *GeoLibre with runtime deployment.json* gives one
-  `deployment.json` (GeoLibre's schema, below), an operator-only `.env`, and
-  commands that mount the file.
+  validates against GeoLibre's published schema with local cross-field checks
+  and exports for one of two targets: *Legacy GeoLibre (<= v3.2.0)* gives
+  files read by tagged releases and lists settings they cannot express;
+  *GeoLibre with runtime deployment.json* gives policy and operator-only
+  environment files; its generated `docker-run.sh` and `compose.yaml` mount the
+  input read-only at `/etc/geolibre/deployment.json` and set
+  `GEOLIBRE_DEPLOYMENT_FILE`.
 - **Organizations and groups.** A console for any server implementing the
   [GeoLibre projects API](https://github.com/opengeos/GeoLibre/blob/main/docs/server-api.md),
   such as the reference server in `backend/geolibre_server_api`: create and
@@ -78,40 +78,84 @@ production.
 
 ## What deploys how
 
-| Setting | GeoLibre reads it from | When |
-| --- | --- | --- |
-| Interface profile | `admin-profile.json` at the app root | Page load |
-| Service library | `GEOLIBRE_SERVICES_FILE`, `GEOLIBRE_BUILTIN_SERVICES` | Container start |
-| Share, collaboration, embed origins, GeoLens, app name | `GEOLIBRE_*` env | Container start |
-| Sidecar, conversion roots, PostGIS hosts | `GEOLIBRE_*` env | Container start |
-| Capabilities, welcome wizard | `VITE_GEOLIBRE_CAPABILITIES`, `VITE_WELCOME_DISABLED` | **Build time** |
+The legacy target supports tagged GeoLibre releases through v3.2.0. Capabilities
+and welcome settings are build arguments (`VITE_GEOLIBRE_CAPABILITIES` and
+`VITE_WELCOME_DISABLED`); settings not supported by that target are listed
+instead of silently represented. See the
+[latest tagged release](https://github.com/opengeos/GeoLibre/releases/latest),
+checked 2026-10-04.
 
-In releases up to v3.2.0, capabilities are build-time only
-([GeoLibre#1673](https://github.com/opengeos/GeoLibre/issues/1673)); the legacy
-export says so and includes the `docker build` command when the policy needs
-its features. The runtime deployment target requires a GeoLibre build with merged
-policy delivery and enforcement. That runtime validates its input during startup,
-fails boot on invalid or unreadable policy, and enforces capabilities on protected
-sidecar routes. Client-side interface and plugin visibility alone are not a
-security boundary.
+The runtime target requires a GeoLibre build containing merged policy delivery and enforcement. A main-line image is published as [`ghcr.io/opengeos/geolibre:sha-ffa8a2e`](https://github.com/opengeos/GeoLibre/pkgs/container/geolibre), from [source commit ffa8a2e](https://github.com/opengeos/GeoLibre/commit/ffa8a2e5ee1f5af2b4404072d5b74d0b6bf2c33a), checked 2026-10-04; the latest tagged release remains v3.2.0. This UI has not smoke-tested that image. Runtime builds validate policy during startup, abort on invalid or unreadable input, and enforce capabilities on protected sidecar routes. Client-side visibility controls alone are not a security boundary.
+
+Mount an input policy separately from generated public output:
+
+```yaml
+volumes:
+  - ./deployment.json:/etc/geolibre/deployment.json:ro
+environment:
+  GEOLIBRE_DEPLOYMENT_FILE: /etc/geolibre/deployment.json
+```
+
+The generated `docker-run.sh` and `compose.yaml` use this input contract: they
+mount `./deployment.json` read-only at `/etc/geolibre/deployment.json` and set
+`GEOLIBRE_DEPLOYMENT_FILE` to that path.
+
+At each container boot, the input is validated; invalid or unreadable input
+aborts startup. Nonblank `GEOLIBRE_*` environment values override matching
+input fields before the container atomically generates public
+`/usr/share/nginx/html/deployment.json`. Never put secrets in that public
+policy. Client precedence is different: `deployment.json` >
+`window.__GEOLIBRE_DEPLOYMENT_ENV__` > build-time settings. Missing, invalid,
+blocked, or later-than-3-second client policy fetches fall through to the next
+source/defaults; this is not invariably a full grant.
+
+Container route enforcement applies only to these bundled sidecar routes:
+
+| Route family | Required grant |
+| --- | --- |
+| `/sidecar/whitebox`, `/sidecar/raster`, `/sidecar/vector`, `/sidecar/pointcloud`, `/sidecar/ml`, `/sidecar/sql` | `processing:run` |
+| `/sidecar/postgis` | `data:add` |
+| `/sidecar/conversion` | `processing:run` **or** `data:add` |
+
+Denied requests return JSON HTTP 403. Without either `data:add` or
+`processing:run`, the bundled sidecar is not started; `/health`, `/algorithms`,
+`/run`, and `/shutdown` are not capability-guarded while it runs. This is
+container-only: browser WASM, desktop processing, and separately exposed
+services are unaffected. Client policy and plugin checks can be bypassed; keep
+authentication and conversion roots restricted.
+
+The final `ai.enabled` value absent or false disables the server `/ai` proxy;
+true requires `GEOLIBRE_AI_URL=/ai`, `GEOLIBRE_AI_PROXY_URL`, and
+`GEOLIBRE_AI_PROXY_TOKEN`. `GEOLIBRE_AI_URL=/ai` overrides a mounted false
+value; upstream URL/token alone do not enable the route. Server `/ai` is not
+guarded by `processing:run`. Proxy credentials stay in the private server
+environment.
+
+Plugin restrictions apply to external plugins: blocked IDs override allowed
+IDs; omitted `allowed` uses the permissive default, while `[]` permits none.
+Built-in plugins are outside external load restrictions. Bundled
+`public/plugins/` drop-ins bypass `allowed` and sideload restrictions but still
+honor blocked IDs. With sideload disabled, URL/zip/directory/project-manifest
+install and trust are disabled; previously installed URLs need a current
+permitted registry entry and fail closed if the registry is unavailable.
+Existing installed URLs remain removable. `defaultActive` seeds permitted
+plugins in fresh projects only; it does not change saved activation or permit
+denied IDs.
+
+Desktop reads its policy from its app config directory and requires restart;
+see [GeoLibre deployment policy docs](https://github.com/opengeos/GeoLibre/blob/main/docs/deployment-policy.md)
+for OS-specific paths. The config is user-writable and is not a security
+boundary. The editor stores its selected export target in browser-local draft
+storage; importing a policy preserves that target, while **Start over** resets
+the target to legacy.
 
 ## `deployment.json`
 
 [`schema/deployment.schema.json`](schema/deployment.schema.json) is a synced
 copy of GeoLibre's canonical schema for a single, versioned policy document.
-`schema/SOURCE.json` records the upstream commit the schema came from.
-
-The published v3.2.0 release still reads the served app-root policy and does not
-include merged runtime delivery or enforcement. GeoLibre's current main reads
-the public input through `GEOLIBRE_DEPLOYMENT_FILE` and atomically writes the
-separately served `/deployment.json` at startup. The deployment export mounts
-the input read-only at `/etc/geolibre/deployment.json` and sets that variable;
-do not mount over the served app-root file.
-
-The policy JSON is public and never contains secrets. When `ai.enabled` is true,
-GeoLibre also requires operator-only `GEOLIBRE_AI_URL=/ai`,
-`GEOLIBRE_AI_PROXY_URL`, and `GEOLIBRE_AI_PROXY_TOKEN` settings. Fill those
-values in the runtime environment, never in `deployment.json`.
+`schema/SOURCE.json` records the upstream commit the schema came from. See the
+[deployment policy docs](https://github.com/opengeos/GeoLibre/blob/main/docs/deployment-policy.md)
+and [capability docs](https://github.com/opengeos/GeoLibre/blob/main/docs/deployment-capabilities.md).
 
 ## Development
 

@@ -8,8 +8,8 @@ const TIER_TONE = { basic: "ok", intermediate: "accent", advanced: "warning" } a
 const BUILT_IN = new Set(catalog.plugins.map((plugin) => plugin.id));
 
 const ALLOWED_OPTIONS = [
-  { value: "any", label: "Any", text: "Every external plugin may load unless blocked." },
-  { value: "only", label: "Only these", text: "Every other external plugin is blocked." },
+  { value: "any", label: "Any", text: "Any external plugin may load unless explicitly blocked." },
+  { value: "only", label: "Only these", text: "Only listed external plugins may load; blocked IDs take precedence." },
 ] as const;
 
 export function PluginsSection({
@@ -41,7 +41,7 @@ export function PluginsSection({
       <div className="flex flex-col gap-5">
         <Field
           label="Registry URL"
-          hint="Empty keeps the image default (plugins.geolibre.app). Absolute, or relative to the app."
+          hint="Empty keeps the runtime or image default registry. Absolute, or relative to the app."
           error={issueAt(issues, "/plugins/registryUrl")}
         >
           {(id) => (
@@ -100,7 +100,7 @@ export function PluginsSection({
 
         <Field
           label="Blocked plugins"
-          hint="Never loaded, even when also allowed."
+          hint="Blocked IDs take precedence over allowed IDs. Built-in plugins are outside external load restrictions; bundled public/plugins drop-ins bypass allowed/sideload rules but still honor blocked IDs."
           error={issueAt(issues, "/plugins/blocked")}
         >
           {(id) => (
@@ -154,14 +154,19 @@ export function PluginsSection({
           checked={plugins?.sideload !== false}
           onChange={(on) => setPlugins({ sideload: on ? undefined : false })}
           label="Allow sideloading"
-          description="Install from a manifest URL, zip, directory or project file."
+          description="Off disables URL, zip, directory and project-manifest installs/trust. Existing archives and extra directories cannot load; saved URLs remain removable."
         />
 
         <Notice tone="accent">
-          A blocked id never loads, even if it is also allowed. With “Only these”, every other external
-          plugin is blocked. To remove all install UI, withhold the plugins:install capability. This is
-          client-side hiding, not enforcement. GeoLibre currently applies only the registry URL at runtime; the
-          allow and block lists, sideloading and default-active ids are stored but not enforced yet.
+          Blocked IDs override allowed IDs. An omitted <code>allowed</code> field permits external plugins by
+          default; an explicit empty list permits none. Built-in plugins are not gated by these external-plugin
+          rules. Bundled <code>public/plugins/</code> drop-ins bypass allowed and sideload restrictions but still
+          honor blocked IDs. With sideloading off, new URL/zip/directory/project-manifest installs are disabled;
+          previously installed URLs require a current permitted registry entry, and an unavailable registry fails
+          closed for those URLs. Existing installed URLs remain removable. <code>defaultActive</code> seeds permitted
+          loaded plugins in fresh projects only; it does not change saved project activation or authorize denied IDs.
+          Client checks on main can be bypassed by a modified client; they are not signing, sandboxing, or server
+          authorization.
         </Notice>
       </div>
     </Card>

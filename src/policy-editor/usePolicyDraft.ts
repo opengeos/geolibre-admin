@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import type { ExportTarget } from "../policy/export";
 import { structuralIssues } from "../policy/validate";
 import {
   DEFAULT_OPERATOR_SETTINGS,
@@ -12,6 +13,7 @@ const STORAGE_KEY = "geolibre-admin:policy-draft";
 interface Draft {
   policy: DeploymentPolicy;
   operator: OperatorSettings;
+  target: ExportTarget;
 }
 
 function load(): Draft {
@@ -27,13 +29,19 @@ function load(): Draft {
         return {
           policy: saved,
           operator: { ...DEFAULT_OPERATOR_SETTINGS, ...parsed.operator },
+          target:
+            parsed.target === "deployment" || parsed.target === "legacy" ? parsed.target : "legacy",
         };
       }
     }
   } catch {
     // Storage unavailable or corrupt: start fresh.
   }
-  return { policy: emptyPolicy(), operator: { ...DEFAULT_OPERATOR_SETTINGS } };
+  return {
+    policy: emptyPolicy(),
+    operator: { ...DEFAULT_OPERATOR_SETTINGS },
+    target: "legacy",
+  };
 }
 
 /**
@@ -63,11 +71,24 @@ export function usePolicyDraft() {
       setDraft((current) => ({ ...current, operator: { ...current.operator, ...update } })),
     [],
   );
-  const replace = useCallback((next: Draft) => setDraft(next), []);
+  const setTarget = useCallback(
+    (target: ExportTarget) => setDraft((current) => ({ ...current, target })),
+    [],
+  );
+  const replace = useCallback(
+    (next: Pick<Draft, "policy" | "operator">) =>
+      setDraft((current) => ({ ...current, ...next })),
+    [],
+  );
   const reset = useCallback(
-    () => setDraft({ policy: emptyPolicy(), operator: { ...DEFAULT_OPERATOR_SETTINGS } }),
+    () =>
+      setDraft({
+        policy: emptyPolicy(),
+        operator: { ...DEFAULT_OPERATOR_SETTINGS },
+        target: "legacy",
+      }),
     [],
   );
 
-  return { ...draft, setPolicy, setOperator, replace, reset };
+  return { ...draft, setPolicy, setOperator, setTarget, replace, reset };
 }

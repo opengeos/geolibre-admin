@@ -43,7 +43,7 @@ function IssueList({ issues }: { issues: Issue[] }) {
 }
 
 export function PolicyEditor() {
-  const { policy, operator, setPolicy, setOperator, replace, reset } = usePolicyDraft();
+  const { policy, operator, target, setPolicy, setOperator, setTarget, replace, reset } = usePolicyDraft();
   const issues = useMemo(() => validatePolicy(policy, operator), [policy, operator]);
   const [importOpen, setImportOpen] = useState(false);
   const [pasted, setPasted] = useState("");
@@ -177,7 +177,7 @@ export function PolicyEditor() {
         </div>
         <div id="policy-export" className="flex scroll-mt-20 flex-col gap-3">
           <IssueList issues={issues} />
-          <ExportSection policy={policy} operator={operator} issues={issues} />
+          <ExportSection policy={policy} operator={operator} target={target} setTarget={setTarget} issues={issues} />
         </div>
       </div>
     </div>
