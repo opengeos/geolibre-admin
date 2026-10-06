@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ApiError, GeoLibreServer, normalizeBaseUrl } from "../src/api/client";
+import { ApiError, GeoLibreServer, normalizeBaseUrl, type IdentityProviderBody } from "../src/api/client";
 
 function mockFetch(status: number, body?: unknown) {
   return vi.fn(async () =>
@@ -75,4 +75,59 @@ describe("GeoLibreServer", () => {
     await expect(server.signOut()).rejects.toThrow("boom");
     expect(server.credential).toBeNull();
   });
+  it("treats only an unconfigured provider 404 as an empty result", async () => {
+    const server = new GeoLibreServer("http://x.test", "tok", mockFetch(404, { error: "identity provider not configured" }));
+    await expect(server.identityProvider("org/1")).resolves.toBeNull();
+
+    const missingOrganization = new GeoLibreServer("http://x.test", "tok", mockFetch(404, { error: "organization not found" }));
+    await expect(missingOrganization.identityProvider("org/1")).rejects.toMatchObject({
+      status: 404,
+      message: "organization not found",
+    });
+  });
+
+  it("encodes the organization ID and sends the identity-provider body", async () => {
+    const fetch = mockFetch(200, { identityProvider: {} });
+    const server = new GeoLibreServer("http://x.test", "tok", fetch);
+    const body: IdentityProviderBody = {
+      issuer: "https://idp.example.org",
+      clientId: "geolibre",
+      clientSecret: "secret",
+      tokenEndpointAuthMethod: "client_secret_basic",
+      scopes: ["openid", "email"],
+      usernameClaim: "preferred_username",
+      emailClaim: "email",
+      groupsClaim: "groups",
+      defaultRole: "member",
+      roleMappings: [],
+      groupMappings: [],
+      requireMfa: false,
+      allowBuiltinAccounts: true,
+      breakGlassUsername: null,
+      enabled: true,
+    };
+    await server.setIdentityProvider("org/1", body);
+    const [url, init] = fetch.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe("http://x.test/api/organizations/org%2F1/identity-provider");
+    expect(init.method).toBe("PUT");
+    expect(JSON.parse(init.body as string)).toEqual(body);
+  });
+
+  it("explains when an API request requires a recent sign-in", async () => {
+    const server = new GeoLibreServer("http://x.test", "tok", mockFetch(401, { error: "reauthentication_required" }));
+    await expect(server.deleteIdentityProvider("org/1")).rejects.toMatchObject({
+      status: 401,
+      message: "A recent sign-in is required for this request. Sign out and sign in again.",
+    });
+  });
+
+  it("deletes an organization identity provider with the expected route", async () => {
+    const fetch = mockFetch(204);
+    const server = new GeoLibreServer("http://x.test", "tok", fetch);
+    await server.deleteIdentityProvider("org/1");
+    const [url, init] = fetch.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe("http://x.test/api/organizations/org%2F1/identity-provider");
+    expect(init.method).toBe("DELETE");
+  });
+
 });

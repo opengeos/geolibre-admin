@@ -7,7 +7,7 @@
  *   GEOLIBRE_TEST_SERVER_URL=http://127.0.0.1:8000 npm test
  */
 import { describe, expect, it } from "vitest";
-import { GeoLibreServer } from "../src/api/client";
+import { GeoLibreServer, type IdentityProviderBody } from "../src/api/client";
 
 const baseUrl = process.env.GEOLIBRE_TEST_SERVER_URL;
 const suffix = Math.random().toString(36).slice(2, 8);
@@ -79,6 +79,90 @@ describe.skipIf(!baseUrl)("projects server contract", () => {
     expect((await admin.myOrganizations()).map((item) => item.id)).not.toContain(org.id);
 
     await Promise.all([admin.signOut(), ada.signOut(), bob.signOut(), third.signOut()]);
+  });
+
+  it("configures an organization identity provider", async () => {
+    const admin = await createAccount(`sso-admin-${suffix}`);
+    const pat = await createAccount(`sso-member-${suffix}`);
+    const org = await admin.createOrganization({
+      slug: `sso-${suffix}`,
+      name: "SSO organization",
+      publicSharingPolicy: "publishers",
+      defaultVisibility: "organization",
+      categories: [],
+    });
+    await admin.setOrganizationMember(org.id, `sso-member-${suffix}`, "member");
+    expect(await admin.identityProvider(org.id)).toBeNull();
+
+    const body: IdentityProviderBody = {
+      issuer: "https://idp.example.org/realms/acme",
+      authorizationEndpoint: "https://idp.example.org/realms/acme/protocol/openid-connect/auth",
+      tokenEndpoint: "https://idp.example.org/realms/acme/protocol/openid-connect/token",
+      jwksUri: "https://idp.example.org/realms/acme/protocol/openid-connect/certs",
+      clientId: "geolibre",
+      clientSecret: "s3cret",
+      tokenEndpointAuthMethod: "client_secret_basic",
+      scopes: ["openid", "email"],
+      usernameClaim: "preferred_username",
+      emailClaim: "email",
+      groupsClaim: "groups",
+      defaultRole: "member",
+      roleMappings: [],
+      groupMappings: [],
+      requireMfa: false,
+      allowBuiltinAccounts: true,
+      breakGlassUsername: null,
+      enabled: true,
+    };
+    const created = await admin.setIdentityProvider(org.id, body);
+    expect(created).toMatchObject({
+      protocol: "oidc",
+      clientSecretSet: true,
+      issuer: body.issuer,
+      authorizationEndpoint: body.authorizationEndpoint,
+      tokenEndpoint: body.tokenEndpoint,
+      jwksUri: body.jwksUri,
+    });
+    expect(created).not.toHaveProperty("clientSecret");
+
+    const updated = await admin.setIdentityProvider(org.id, {
+      ...body,
+      clientSecret: undefined,
+      scopes: ["openid", "email"],
+    });
+    expect(updated.scopes).toEqual(["openid", "email"]);
+    expect(updated.clientSecretSet).toBe(true);
+
+    await expect(admin.setIdentityProvider(org.id, {
+      ...body,
+      clientSecret: undefined,
+      allowBuiltinAccounts: false,
+      breakGlassUsername: null,
+    })).rejects.toMatchObject({ status: 422 });
+    const withBreakGlass = await admin.setIdentityProvider(org.id, {
+      ...body,
+      clientSecret: undefined,
+      allowBuiltinAccounts: false,
+      breakGlassUsername: `sso-admin-${suffix}`,
+    });
+    expect(withBreakGlass.breakGlassUsername).toBe(`sso-admin-${suffix}`);
+
+    await expect(admin.setIdentityProvider(org.id, {
+      ...body,
+      clientSecret: undefined,
+      allowBuiltinAccounts: false,
+      breakGlassUsername: `sso-admin-${suffix}`,
+      groupMappings: [{ value: "x", groupId: "00000000-0000-0000-0000-000000000000" }],
+    })).rejects.toMatchObject({
+      status: 422,
+      message: "group mapping must name a group in this organization",
+    });
+    await expect(pat.identityProvider(org.id)).rejects.toMatchObject({ status: 403 });
+
+    await admin.deleteIdentityProvider(org.id);
+    expect(await admin.identityProvider(org.id)).toBeNull();
+    await admin.deleteOrganization(org.id);
+    await Promise.all([admin.signOut(), pat.signOut()]);
   });
 
   it("manages a group end to end", async () => {

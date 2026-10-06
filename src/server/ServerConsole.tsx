@@ -202,6 +202,7 @@ function Console({ session, onSignOut }: { session: Session; onSignOut: () => vo
             key={selectedOrg.id}
             server={server}
             organization={selectedOrg}
+            groups={groupList.filter((group) => group.organizationId === selectedOrg.id)}
             selfUsername={me.user.username}
             onChanged={(updated: Organization) =>
               organizations.setData(orgList.map((org) => (org.id === updated.id ? updated : org)))

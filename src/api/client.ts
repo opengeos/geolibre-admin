@@ -84,6 +84,55 @@ export interface Project {
   updatedAt: string;
   projectUrl?: string;
 }
+export type TokenEndpointAuthMethod = "client_secret_basic" | "client_secret_post";
+export const TOKEN_ENDPOINT_AUTH_METHODS: TokenEndpointAuthMethod[] = ["client_secret_basic", "client_secret_post"];
+
+export interface RoleMapping {
+  value: string;
+  role: OrganizationRole;
+}
+
+export interface GroupMapping {
+  value: string;
+  groupId: string;
+}
+
+/** Settings shared by the PUT body and the GET shape. */
+export interface IdentityProviderSettings {
+  issuer: string;
+  clientId: string;
+  tokenEndpointAuthMethod: TokenEndpointAuthMethod;
+  scopes: string[];
+  usernameClaim: string;
+  emailClaim: string;
+  groupsClaim: string | null;
+  defaultRole: OrganizationRole;
+  roleMappings: RoleMapping[];
+  groupMappings: GroupMapping[];
+  requireMfa: boolean;
+  allowBuiltinAccounts: boolean;
+  breakGlassUsername: string | null;
+  enabled: boolean;
+}
+
+/** PUT body: omitted endpoints trigger discovery; omitted clientSecret keeps the stored one. */
+export interface IdentityProviderBody extends IdentityProviderSettings {
+  clientSecret?: string;
+  authorizationEndpoint?: string;
+  tokenEndpoint?: string;
+  jwksUri?: string;
+}
+
+export interface IdentityProvider extends IdentityProviderSettings {
+  protocol: "oidc";
+  clientSecretSet: true;
+  authorizationEndpoint: string;
+  tokenEndpoint: string;
+  jwksUri: string;
+  /** `<server issuer>/oauth/sso/callback`; null when the server has no OAuth clients configured. */
+  redirectUri: string | null;
+  updatedAt: string;
+}
 
 export class ApiError extends Error {
   readonly status: number;
@@ -164,6 +213,9 @@ export class GeoLibreServer {
       let message = typeof error.error === "string" ? error.error : `HTTP ${response.status}`;
       if (message === "insufficient_scope" && error.requiredScope) {
         message = `This token lacks the ${error.requiredScope} scope.`;
+      }
+      if (message === "reauthentication_required") {
+        message = "A recent sign-in is required for this request. Sign out and sign in again.";
       }
       throw new ApiError(response.status, message);
     }
@@ -300,6 +352,40 @@ export class GeoLibreServer {
         `/api/organizations/${encodeURIComponent(id)}/projects?limit=100`,
       )
     ).projects;
+  }
+
+  // Organization single sign-on
+
+  async identityProvider(id: string): Promise<IdentityProvider | null> {
+    try {
+      return (await this.request<{ identityProvider: IdentityProvider }>(
+        "GET",
+        `/api/organizations/${encodeURIComponent(id)}/identity-provider`,
+      )).identityProvider;
+    } catch (error) {
+      if (
+        error instanceof ApiError &&
+        error.status === 404 &&
+        error.message === "identity provider not configured"
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  async setIdentityProvider(id: string, body: IdentityProviderBody): Promise<IdentityProvider> {
+    return (
+      await this.request<{ identityProvider: IdentityProvider }>(
+        "PUT",
+        `/api/organizations/${encodeURIComponent(id)}/identity-provider`,
+        body,
+      )
+    ).identityProvider;
+  }
+
+  deleteIdentityProvider(id: string): Promise<void> {
+    return this.request("DELETE", `/api/organizations/${encodeURIComponent(id)}/identity-provider`);
   }
 
   // Groups

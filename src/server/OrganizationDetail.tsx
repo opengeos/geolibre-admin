@@ -4,12 +4,14 @@ import {
   SHARING_POLICIES,
   VISIBILITIES,
   type GeoLibreServer,
+  type Group,
   type Organization,
   type OrganizationRole,
   type PublicSharingPolicy,
   type Visibility,
 } from "../api/client";
 import { Badge, Button, Card, ConfirmButton, Field, Input, Notice, Select, TagInput, cx } from "../components/ui";
+import { IdentityProviderPanel } from "./IdentityProviderPanel";
 import { InvitationsPanel, LoadState, MembersPanel, ProjectsPanel } from "./panels";
 import { useAction, useAsync } from "./useAsync";
 
@@ -128,25 +130,32 @@ export function OrganizationSettingsForm({
   );
 }
 
-type Tab = "members" | "invitations" | "projects" | "settings";
+type Tab = "members" | "invitations" | "projects" | "sso" | "settings";
 
 export function OrganizationDetail({
   server,
   organization,
   selfUsername,
+  groups,
   onChanged,
   onDeleted,
 }: {
   server: GeoLibreServer;
   organization: Organization;
   selfUsername: string | null;
+  groups: Group[];
   onChanged: (organization: Organization) => void;
   onDeleted: () => void;
 }) {
   const isAdmin = organization.role === "administrator";
-  const tabs: Tab[] = isAdmin ? ["members", "invitations", "projects", "settings"] : ["members", "projects"];
+  const tabs: Tab[] = isAdmin
+    ? ["members", "invitations", "projects", "sso", "settings"]
+    : ["members", "projects"];
   const [tab, setTab] = useState<Tab>("members");
   const members = useAsync(() => server.organizationMembers(organization.id), [server, organization.id]);
+  const administrators = (members.data ?? [])
+    .filter((member) => member.status === "accepted" && member.role === "administrator" && member.username)
+    .map((member) => member.username!);
   const invitations = useAsync(
     () => (isAdmin ? server.organizationInvitations(organization.id) : Promise.resolve([])),
     [server, organization.id, isAdmin],
@@ -183,7 +192,7 @@ export function OrganizationDetail({
               tab === option ? "border-accent font-medium text-text" : "border-transparent text-muted hover:text-text",
             )}
           >
-            {option}
+            {option === "sso" ? "Single Sign-On" : option}
           </button>
         ))}
       </div>
@@ -254,6 +263,15 @@ export function OrganizationDetail({
           <LoadState loading={projects.loading && !projects.data} error={projects.error} onRetry={projects.reload} />
           {projects.data ? <ProjectsPanel projects={projects.data} emptyText="No organization projects you can see." /> : null}
         </>
+      ) : null}
+
+      {tab === "sso" && isAdmin ? (
+        <IdentityProviderPanel
+          server={server}
+          organization={organization}
+          groups={groups}
+          administrators={administrators}
+        />
       ) : null}
 
       {tab === "settings" && isAdmin ? (

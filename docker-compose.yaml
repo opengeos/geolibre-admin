@@ -26,7 +26,7 @@ services:
     # No published image yet; build GeoLibre's reference server from git, pinned
     # to a commit so builds are reproducible. Bump it to pick up server changes.
     build:
-      context: https://github.com/opengeos/GeoLibre.git#1ae840dc87623e49c76a61e300454b9cd743b926:backend/geolibre_server_api
+      context: https://github.com/opengeos/GeoLibre.git#d4d490e3dca09b5460e1fd4c33afa67938795ae6:backend/geolibre_server_api
     image: geolibre-admin-server:local
     # Loopback only: /api/accounts and /api/auth/token have no rate limiting.
     ports:

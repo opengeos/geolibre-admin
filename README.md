@@ -23,8 +23,9 @@ It has two parts:
   [GeoLibre projects API](https://github.com/opengeos/GeoLibre/blob/main/docs/server-api.md),
   such as the reference server in `backend/geolibre_server_api`: create and
   configure organizations and groups, manage members and roles, issue and
-  revoke invitations, approve join requests, accept invitations, transfer group
-  ownership, and remove projects from a group.
+  revoke invitations, configure organization OIDC single sign-on, approve join
+  requests, accept invitations, transfer group ownership, and remove projects
+  from a group.
 
 ## Use it
 
